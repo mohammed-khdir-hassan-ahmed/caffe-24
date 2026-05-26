@@ -70,12 +70,13 @@ export function AnimatedCard({
   const hoverVariants = {
     rest: {
       y: 0,
-      boxShadow: "0 8px 16px rgba(0, 0, 0, 0.1)",
+      boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+      scale: 1,
     },
     hover: {
-      y: -15,
-      boxShadow: "0 35px 70px rgba(217, 119, 6, 0.35)",
-      scale: 1.03,
+      y: -4,
+      boxShadow: "0 12px 28px rgba(217,119,6,0.18)",
+      scale: 1.015,
     },
   };
 
@@ -94,7 +95,7 @@ export function AnimatedCard({
         animate={isHovering ? "hover" : "rest"}
         onMouseEnter={() => setIsHovering(true)}
         onMouseLeave={() => setIsHovering(false)}
-        transition={{ duration: 0.45, ease: "easeOut", type: "spring", stiffness: 150, damping: 18 }}
+        transition={{ duration: 0.3, ease: "easeOut" }}
       >
         {children}
       </motion.div>

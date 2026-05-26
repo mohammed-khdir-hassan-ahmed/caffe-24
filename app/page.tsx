@@ -17,6 +17,7 @@ import {
   Salad,
   Utensils,
   Citrus,
+  ShoppingBag,
 } from "lucide-react";
 import { useMemo, useState, useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
@@ -71,6 +72,64 @@ export default function HomePage() {
   };
 
   const currencyLabel = lang === "ckb" ? "دینار" : "IQD";
+
+  const [cart, setCart] = useState<{ item: MenuItem; quantity: number }[]>([]);
+  const [showCheckout, setShowCheckout] = useState(false);
+  const [customerName, setCustomerName] = useState("");
+  const [customerAddress, setCustomerAddress] = useState("");
+  const [customerPhone, setCustomerPhone] = useState("");
+
+  const updateCartQuantity = (item: MenuItem, change: number) => {
+    setCart((prevCart) => {
+      const existing = prevCart.find((ci) => ci.item.id === item.id);
+      if (existing) {
+        const newQuantity = existing.quantity + change;
+        if (newQuantity <= 0) {
+          return prevCart.filter((ci) => ci.item.id !== item.id);
+        }
+        return prevCart.map((ci) =>
+          ci.item.id === item.id ? { ...ci, quantity: newQuantity } : ci
+        );
+      }
+      if (change > 0) {
+        return [...prevCart, { item, quantity: change }];
+      }
+      return prevCart;
+    });
+  };
+
+  const generateWhatsAppLink = () => {
+    const phone = "9647515481228";
+    let message = "";
+    if (lang === "ckb") {
+      message = "سڵاو کافێ ٢٤ ☕\nمن دەمەوێت ئەم داواکارییە بنێرم:\n\n";
+      message += `👤 *زانیاری کڕیار:*\n`;
+      message += `• ناوی تەواو: ${customerName || "دیاری نەکراو"}\n`;
+      message += `• ناونیشان: ${customerAddress || "دیاری نەکرا"}\n`;
+      message += `• ژمارەی مۆبایل: ${customerPhone || "دیاری نەکراو"}\n\n`;
+      message += `🛒 *لیستی داواکارییەکان:*\n`;
+      cart.forEach((cartItem) => {
+        const title = cartItem.item.titleKurdish || cartItem.item.title;
+        message += `• *${title}* (${cartItem.quantity}x) - ${(cartItem.item.price * cartItem.quantity).toLocaleString()} ${currencyLabel}\n`;
+      });
+      const total = cart.reduce((sum, ci) => sum + (ci.item.price * ci.quantity), 0);
+      message += `\n*💰 کۆی گشتی داواکاری: ${total.toLocaleString()} ${currencyLabel}*`;
+    } else {
+      message = "Hello Caffe 24 ☕\nI would like to place this order:\n\n";
+      message += `👤 *Customer Info:*\n`;
+      message += `• Full Name: ${customerName || "Not specified"}\n`;
+      message += `• Address: ${customerAddress || "Not specified"}\n`;
+      message += `• Mobile Number: ${customerPhone || "Not specified"}\n\n`;
+      message += `🛒 *Order Items:*\n`;
+      cart.forEach((cartItem) => {
+        const title = cartItem.item.title;
+        message += `• *${title}* (${cartItem.quantity}x) - ${(cartItem.item.price * cartItem.quantity).toLocaleString()} ${currencyLabel}\n`;
+      });
+      const total = cart.reduce((sum, ci) => sum + (ci.item.price * ci.quantity), 0);
+      message += `\n*💰 Total Amount: ${total.toLocaleString()} ${currencyLabel}*`;
+    }
+    return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+  };
 
   const openItem = (item: MenuItem) => {
     setSelectedItem(item);
@@ -213,7 +272,7 @@ export default function HomePage() {
     <div className="min-h-screen flex flex-col bg-linear-to-b from-white to-gray-50 text-slate-900">
       <Celebration />
       <nav className="bg-white/90 sm:backdrop-blur shadow-sm border-0">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-3">
             <Image src="/image/2.png" alt="Logo" width={48} height={48} />
           </div>
@@ -232,7 +291,7 @@ export default function HomePage() {
         </div>
       </nav>
 
-      <main className="flex-1 max-w-7xl mx-auto px-6 py-5 w-full">
+      <main className="flex-1 max-w-7xl mx-auto px-2.5 sm:px-6 py-5 w-full">
         {!loading && items.length > 0 ? (
           <>
             {/* Header Section */}
@@ -262,9 +321,9 @@ export default function HomePage() {
             </div>
 
             {/* Category Filter */}
-            <div className="mb-6 -mx-4 sm:mx-0">
-              <div className="overflow-x-auto scrollbar-hide px-4 sm:px-0">
-                <div className="flex items-center gap-2 sm:gap-3 md:gap-4 min-w-max sm:min-w-0 sm:justify-center border-b border-gray-200 pb-2">
+            <div className="mb-6 -mx-2.5 sm:mx-0">
+              <div className="overflow-x-auto scrollbar-hide px-2.5 sm:px-0">
+                <div className="flex items-center gap-2 min-w-max sm:min-w-0 sm:justify-center sm:flex-wrap">
                   {categories.map((cat) => {
                     const Icon = cat.icon;
                     const active = selectedCategory === cat.id;
@@ -272,16 +331,14 @@ export default function HomePage() {
                       <button
                         key={cat.id}
                         onClick={() => setSelectedCategory(cat.id)}
-                        className={`flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 px-3 py-2 sm:pb-2 sm:pt-0 rounded-lg sm:rounded-none text-xs sm:text-base lg:text-lg font-semibold transition whitespace-nowrap border-b-2 sm:border-b-2 ${
+                        className={`flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 whitespace-nowrap ${
                           active
-                            ? "border-amber-600 text-amber-700 bg-amber-50 sm:bg-transparent"
-                            : "border-transparent text-gray-600 hover:text-gray-900 hover:bg-gray-100 sm:hover:bg-transparent hover:border-gray-300"
+                            ? "bg-amber-600 text-white shadow-md shadow-amber-200"
+                            : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                         }`}
                       >
-                        <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
-                        <span className="text-[10px] sm:text-xs lg:text-base">
-                          {cat.name}
-                        </span>
+                        <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                        <span>{cat.name}</span>
                       </button>
                     );
                   })}
@@ -292,17 +349,28 @@ export default function HomePage() {
             {/* Search Bar */}
             <div className="mb-8 flex flex-col items-center">
               <div className="relative w-full max-w-2xl">
-                <Search
-                  className="absolute left-3 top-3 text-gray-400"
-                  size={20}
-                />
-                <Input
-                  type="text"
-                  placeholder={t("home.searchPlaceholder")}
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 h-12 text-base sm:text-sm bg-white border border-gray-300 text-gray-900 placeholder:text-gray-500"
-                />
+                {/* 1.5px border animation wrapper */}
+                <div className="relative rounded-xl p-[1.5px] overflow-hidden shadow-xs bg-slate-200">
+                  <div 
+                    className="absolute inset-[-100%] rounded-xl animate-[spin_5s_linear_infinite]" 
+                    style={{
+                      background: "conic-gradient(from 0deg, transparent 50%, #1f2937 80%, transparent 100%)"
+                    }} 
+                  />
+                  <div className="relative bg-white rounded-[10px] flex items-center">
+                    <Search
+                      className="absolute left-3 text-gray-400"
+                      size={20}
+                    />
+                    <Input
+                      type="text"
+                      placeholder={t("home.searchPlaceholder")}
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="pl-10 h-12 text-sm sm:text-base bg-transparent border-0 text-gray-900 placeholder:text-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-[10px]"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -314,19 +382,19 @@ export default function HomePage() {
                     <div key={categoryId} className="space-y-6">
                       {/* Category Header */}
                       <div className="flex items-center gap-3 pt-2 pb-1">
-                        <div className="h-px flex-1 bg-linear-to-r from-transparent via-amber-400 to-transparent"></div>
+                        <div className="h-px flex-1 bg-linear-to-r from-transparent via-gray-800 to-transparent"></div>
                         <h2 className="text-base md:text-lg font-bold text-gray-800 whitespace-nowrap px-2">
                           {getCategoryName(categoryId)}
                         </h2>
-                        <div className="h-px flex-1 bg-linear-to-r from-transparent via-amber-400 to-transparent"></div>
+                        <div className="h-px flex-1 bg-linear-to-r from-transparent via-gray-800 to-transparent"></div>
                       </div>
 
                       {/* Items Grid */}
-                      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+                      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-6">
                         {categoryItems.map((item, index) => (
                           <AnimatedCard key={item.id} index={index}>
                             <div
-                              className="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow cursor-pointer relative h-full"
+                              className="bg-white border border-gray-100 rounded-xl shadow-sm transition-shadow cursor-pointer relative h-full"
                               onClick={() => openItem(item)}
                             >
                               <div className="relative w-full h-36 sm:h-44 md:h-52 overflow-hidden rounded-t-xl">
@@ -335,7 +403,7 @@ export default function HomePage() {
                                   alt={item.title}
                                   fill
                                   sizes="(max-width: 640px) 50vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                                  className="object-cover hover:scale-105 transition-transform duration-300 bg-gray-200"
+                                  className="object-cover transition-transform duration-300 bg-gray-200"
                                 />
                               </div>
 
@@ -351,34 +419,60 @@ export default function HomePage() {
                               </div>
 
                               {/* Content */}
-                              <div className="relative pr-2 pl-2 p-4 sm:p-5">
-                                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 rounded-b-xl" />
-
-                                <div className="relative z-10">
-                                  <p
-                                    className="text-gray-700 line-clamp-2 text-xs sm:text-sm leading-relaxed mb-3"
-                                    dir={lang === "ckb" ? "rtl" : "ltr"}
-                                  >
-                                    {lang === "ckb"
-                                      ? item.descriptionKurdish ||
-                                        item.description ||
-                                        "No description available"
-                                      : item.description ||
-                                        "No description available"}
-                                  </p>
-                                  <div className="flex items-center justify-between gap-2">
+                              <div className="px-3 pt-2 pb-3">
+                                <div className="flex flex-col gap-1.5">
+                                  {/* Title + Price on same row */}
+                                  <div className="flex items-center justify-between gap-1">
                                     <h5
-                                      className={`flex-1 min-w-0 text-sm sm:text-base font-semibold tracking-wide text-gray-900 truncate`}
+                                      className="text-xs sm:text-sm font-semibold text-gray-900 truncate flex-1"
                                       dir={lang === "ckb" ? "rtl" : "ltr"}
                                     >
                                       {lang === "ckb"
                                         ? item.titleKurdish || item.title
                                         : item.title}
                                     </h5>
-                                    <span className="rounded-full bg-amber-50 text-amber-700 text-xs sm:text-sm font-bold whitespace-nowrap px-0.5 shrink-0">
-                                      {item.price?.toLocaleString()}{" "}
-                                      {currencyLabel}
+                                    <span className="text-xs font-extrabold text-amber-700 whitespace-nowrap shrink-0">
+                                      {item.price?.toLocaleString()}
                                     </span>
+                                  </div>
+
+                                  {/* Add / Quantity Control — below title+price */}
+                                  <div
+                                    className="relative z-20"
+                                    onClick={(e) => e.stopPropagation()}
+                                  >
+                                    {(() => {
+                                      const cartItem = cart.find((ci) => ci.item.id === item.id);
+                                      if (cartItem) {
+                                        return (
+                                          <div className="w-full h-8 flex items-center justify-between gap-1 bg-amber-50 border border-amber-200 rounded-lg px-1">
+                                            <button
+                                              onClick={() => updateCartQuantity(item, -1)}
+                                              className="w-6 h-6 flex items-center justify-center rounded-md bg-amber-600 text-white hover:bg-amber-700 active:scale-95 transition-all text-sm font-black"
+                                              aria-label="Decrease quantity"
+                                            >−</button>
+                                            <span className="text-sm font-bold text-amber-900 min-w-[20px] text-center">
+                                              {cartItem.quantity}
+                                            </span>
+                                            <button
+                                              onClick={() => updateCartQuantity(item, 1)}
+                                              className="w-6 h-6 flex items-center justify-center rounded-md bg-amber-600 text-white hover:bg-amber-700 active:scale-95 transition-all text-sm font-black"
+                                              aria-label="Increase quantity"
+                                            >+</button>
+                                          </div>
+                                        );
+                                      }
+                                      return (
+                                        <button
+                                          onClick={() => updateCartQuantity(item, 1)}
+                                          className="w-full h-8 flex items-center justify-center gap-1.5 rounded-lg bg-amber-600 hover:bg-amber-700 text-white transition-all active:scale-95 font-bold text-xs"
+                                          aria-label="Add to cart"
+                                        >
+                                          <ShoppingBag size={13} />
+                                          <span>{lang === "ckb" ? "داواکردن" : "Order"}</span>
+                                        </button>
+                                      );
+                                    })()}
                                   </div>
                                 </div>
                               </div>
@@ -498,9 +592,46 @@ export default function HomePage() {
                       selectedItem.description
                     : selectedItem.description}
                 </p>
+
+                {/* Add to cart controls inside modal */}
+                {(() => {
+                  const cartItem = cart.find((ci) => ci.item.id === selectedItem.id);
+                  if (cartItem) {
+                    return (
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-xl p-1">
+                          <button
+                            onClick={() => updateCartQuantity(selectedItem, -1)}
+                            className="w-8 h-8 flex items-center justify-center rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-black text-base active:scale-90 transition-all shadow-xs"
+                            aria-label="Decrease"
+                          >−</button>
+                          <span className="text-sm font-bold text-amber-900 min-w-[24px] text-center">{cartItem.quantity}</span>
+                          <button
+                            onClick={() => updateCartQuantity(selectedItem, 1)}
+                            className="w-8 h-8 flex items-center justify-center rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-black text-base active:scale-90 transition-all shadow-xs"
+                            aria-label="Increase"
+                          >+</button>
+                        </div>
+                        <span className="text-xs text-slate-500 font-medium">
+                          {lang === "ckb" ? "لە سەبەتەکەدایە" : "In your cart"}
+                        </span>
+                      </div>
+                    );
+                  }
+                  return (
+                    <button
+                      onClick={() => updateCartQuantity(selectedItem, 1)}
+                      className="w-full mb-4 py-2.5 px-4 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl shadow-xs transition-all active:scale-95 flex items-center justify-center gap-2"
+                    >
+                      <span className="text-lg font-black">+</span>
+                      {lang === "ckb" ? "زیادکردن بۆ داواکاری" : "Add to Order"}
+                    </button>
+                  );
+                })()}
+
                 <button
                   onClick={() => setSelectedItem(null)}
-                  className="w-full py-2.5 px-4 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded-lg transition"
+                  className="w-full py-2 px-4 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold rounded-xl transition text-sm"
                 >
                   {t("common.close")}
                 </button>
@@ -509,6 +640,169 @@ export default function HomePage() {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Side Drawer Checkout */}
+      {showCheckout && (
+        <div
+          className="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 transition-opacity duration-300"
+          onClick={() => setShowCheckout(false)}
+        />
+      )}
+
+      <div
+        className={`fixed top-0 bottom-0 left-0 w-full sm:w-[400px] bg-white shadow-2xl z-50 transition-transform duration-300 ease-in-out flex flex-col ${
+          showCheckout ? "translate-x-0" : "-translate-x-full"
+        }`}
+        dir={lang === "ckb" ? "rtl" : "ltr"}
+      >
+        {/* Header */}
+        <div className="bg-gradient-to-r from-[#6F4E37] to-[#3C2A21] px-5 py-5 text-white flex justify-between items-center relative">
+          <div>
+            <h2 className="text-lg font-bold">
+              {lang === "ckb" ? "تەواوکردنی داواکاری" : "Complete Your Order"}
+            </h2>
+            <p className="text-xs text-amber-200/90 font-light mt-0.5">
+              {lang === "ckb" ? "زانیارییەکانت بنووسە بۆ ناردنی داواکاری" : "Enter your info to place the order"}
+            </p>
+          </div>
+          <button
+            onClick={() => setShowCheckout(false)}
+            className="rounded-lg bg-black/25 hover:bg-black/40 text-white p-2 transition-all"
+            aria-label="Close drawer"
+          >
+            <X size={18} />
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 p-5 overflow-y-auto space-y-6">
+          {/* Cart Summary */}
+          <div className="bg-slate-50 border border-slate-100 rounded-xl p-4 space-y-3">
+            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+              {lang === "ckb" ? "خواردنەوە هەڵبژێردراوەکان" : "Selected Items"}
+            </p>
+            <div className="space-y-3 max-h-[260px] overflow-y-auto pr-1">
+              {cart.map((cartItem) => (
+                <div key={cartItem.item.id} className="flex items-center gap-2 text-sm">
+                  {/* Name + price */}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-slate-800 font-semibold truncate">
+                      {lang === "ckb" ? cartItem.item.titleKurdish || cartItem.item.title : cartItem.item.title}
+                    </p>
+                    <p className="text-amber-600 font-bold text-xs">
+                      {(cartItem.item.price * cartItem.quantity).toLocaleString()} {currencyLabel}
+                    </p>
+                  </div>
+                  {/* Controls */}
+                  <div className="flex items-center gap-1 shrink-0">
+                    <button
+                      onClick={() => updateCartQuantity(cartItem.item, -1)}
+                      className="w-6 h-6 flex items-center justify-center rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-black text-xs active:scale-90 transition-all shadow-xs"
+                      aria-label="Decrease"
+                    >−</button>
+                    <span className="text-xs font-bold text-slate-800 min-w-[18px] text-center">{cartItem.quantity}</span>
+                    <button
+                      onClick={() => updateCartQuantity(cartItem.item, 1)}
+                      className="w-6 h-6 flex items-center justify-center rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-black text-xs active:scale-90 transition-all shadow-xs"
+                      aria-label="Increase"
+                    >+</button>
+                    <button
+                      onClick={() => updateCartQuantity(cartItem.item, -cartItem.quantity)}
+                      className="w-6 h-6 flex items-center justify-center rounded-lg bg-rose-500 hover:bg-rose-600 text-white active:scale-90 transition-all shadow-xs"
+                      aria-label="Remove"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="border-t border-slate-200/60 pt-3 flex justify-between items-center mt-2">
+              <span className="text-slate-900 font-extrabold text-sm">
+                {lang === "ckb" ? "کۆی گشتی:" : "Total Amount:"}
+              </span>
+              <span className="text-amber-700 font-black text-base">
+                {cart.reduce((sum, ci) => sum + (ci.item.price * ci.quantity), 0).toLocaleString()} {currencyLabel}
+              </span>
+            </div>
+          </div>
+
+          {/* Form */}
+          <div className="space-y-4">
+            {/* Name */}
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-slate-600 block">
+                {lang === "ckb" ? "ناوی تەواو *" : "Full Name *"}
+              </label>
+              <input
+                type="text"
+                required
+                placeholder={lang === "ckb" ? "  بۆنموونە: هەڵمەت قادر" : "Halmat qadir"}
+                value={customerName}
+                onChange={(e) => setCustomerName(e.target.value)}
+                className="w-full px-3.5 py-2.5 text-sm bg-white border border-slate-300 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-amber-500/20 focus:border-amber-600 transition text-slate-800 placeholder:text-slate-400 placeholder:text-[11px] sm:placeholder:text-xs"
+              />
+            </div>
+
+            {/* Address */}
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-slate-600 block">
+                {lang === "ckb" ? "ناونیشانی نیشتەجێبوون *" : "Delivery Address *"}
+              </label>
+              <input
+                type="text"
+                required
+                placeholder={lang === "ckb" ? "بۆ نموونە: قەڵادزێ - بەرامبەر پاڕکی شار" : "e.g., Qalatdizah - Opposite Shar Park"}
+                value={customerAddress}
+                onChange={(e) => setCustomerAddress(e.target.value)}
+                className="w-full px-3.5 py-2.5 text-sm bg-white border border-slate-300 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-amber-500/20 focus:border-amber-600 transition text-slate-800 placeholder:text-slate-400 placeholder:text-[11px] sm:placeholder:text-xs"
+              />
+            </div>
+
+            {/* Phone */}
+            <div className="space-y-1">
+              <label className="text-xs font-bold text-slate-600 block">
+                {lang === "ckb" ? "ژمارەی مۆبایل *" : "Mobile Number *"}
+              </label>
+              <input
+                type="tel"
+                required
+                dir="ltr"
+                placeholder={lang === "ckb" ? "07515481228" : "e.g., 07515481228"}
+                value={customerPhone}
+                onChange={(e) => setCustomerPhone(e.target.value)}
+                className={`w-full px-3.5 py-2.5 text-sm bg-white border border-slate-300 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-amber-500/20 focus:border-amber-600 transition text-slate-800 placeholder:text-slate-400 placeholder:text-[11px] sm:placeholder:text-xs text-left ${lang === "ckb" ? "placeholder:text-right" : "placeholder:text-left"}`}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Footer Submit */}
+        <div className="p-5 border-t border-slate-100 bg-slate-50">
+          <button
+            onClick={() => {
+              if (!customerName.trim() || !customerAddress.trim() || !customerPhone.trim()) {
+                alert(lang === "ckb" ? "تکایە هەموو خانەکان بە دروستی پڕ بکەرەوە!" : "Please fill in all required fields!");
+                return;
+              }
+              window.open(generateWhatsAppLink(), "_blank");
+              setShowCheckout(false);
+            }}
+            className="w-full py-3 bg-gradient-to-r from-[#6F4E37] to-[#3C2A21] text-white rounded-xl shadow-lg shadow-amber-950/20 hover:shadow-xl hover:shadow-amber-950/30 font-extrabold flex items-center justify-center gap-2 hover:-translate-y-0.5 active:translate-y-0 active:scale-98 transition-all duration-300 text-sm"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="white"
+            >
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+            </svg>
+            <span>{lang === "ckb" ? "  ناردنی داواکاری لەڕێگای whatsup " : "Confirm via WhatsApp"}</span>
+          </button>
+        </div>
+      </div>
 
       {/* Contact Information Modal */}
       <Dialog open={showAbout} onOpenChange={setShowAbout}>
@@ -716,11 +1010,29 @@ export default function HomePage() {
         </div>
       </footer>
 
+      {/* WhatsApp Cart Floating Button */}
+      {cart.length > 0 && !showCheckout && (
+        <button
+          onClick={() => setShowCheckout(true)}
+          className={`fixed z-50 flex items-center justify-center bg-amber-600 hover:bg-amber-700 text-white p-3 rounded-xl shadow-lg transition transform hover:scale-110 duration-300 right-8 ${
+            showScrollTop ? "bottom-[88px]" : "bottom-8"
+          }`}
+          aria-label="Open checkout"
+        >
+          <div className="relative flex items-center justify-center">
+            <ShoppingBag size={24} />
+            <span className="absolute -top-4 -right-4 bg-rose-500 text-white rounded-full text-[9px] w-4.5 h-4.5 flex items-center justify-center border border-white font-black animate-pulse shadow-md">
+              {cart.reduce((sum, ci) => sum + ci.quantity, 0)}
+            </span>
+          </div>
+        </button>
+      )}
+
       {/* Scroll to Top Button */}
       {showScrollTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-8 right-8 bg-amber-600 hover:bg-amber-700 text-white p-3 rounded-full shadow-lg transition transform hover:scale-110 animate-fade-in z-50"
+          className="fixed bottom-8 right-8 bg-amber-600 hover:bg-amber-700 text-white p-3 rounded-xl shadow-lg transition transform hover:scale-110 animate-fade-in z-50"
           aria-label="Scroll to top"
         >
           <ArrowUp size={24} />

@@ -15,8 +15,8 @@ export const translations: Record<AppLang, Record<string, string>> = {
 
     "lang.switch": "Language",
 
-    "home.title": "CAFFE 24",
-    "home.titleKurdish": "CAFFE 24",
+    "home.title": "Caffe 24",
+    "home.titleKurdish": "کافێ 24",
     "home.subtitle": "Fast in service, delicious in taste.",
     "home.searchPlaceholder": " What do you want to eat?",
     "home.noItemsFound": "No items found matching your search",
