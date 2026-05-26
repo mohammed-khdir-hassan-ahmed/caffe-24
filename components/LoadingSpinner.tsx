@@ -69,7 +69,7 @@ export default function LoadingSpinner() {
               animation: 'shimmer 2s infinite',
               backgroundSize: '200% 100%'
             }}>
-              Loading.
+              Loading
             </span>
           </p>
           
