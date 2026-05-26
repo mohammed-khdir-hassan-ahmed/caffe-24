@@ -57,7 +57,6 @@ export default function HomePage() {
     setMounted(true);
   }, []);
 
-  // Handle scroll to top button visibility
   useEffect(() => {
     const handleScroll = () => {
       setShowScrollTop(window.scrollY > 300);
@@ -149,7 +148,7 @@ export default function HomePage() {
         console.error("Failed to fetch menu items:", error);
         setItems([]);
       } finally {
-        // Add minimum 1.5 second delay to show the spinner
+       
         setTimeout(() => {
           setLoading(false);
         }, 500);
