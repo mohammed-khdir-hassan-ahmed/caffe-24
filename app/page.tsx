@@ -1028,7 +1028,7 @@ export default function HomePage() {
       )}
 
       {/* Scroll to Top Button */}
-      {showScrollTop && (
+      {showScrollTop && !showCheckout && (
         <button
           onClick={scrollToTop}
           className="fixed bottom-8 right-8 bg-amber-600 hover:bg-amber-700 text-white p-3 rounded-xl shadow-lg transition transform hover:scale-110 animate-fade-in z-50"
