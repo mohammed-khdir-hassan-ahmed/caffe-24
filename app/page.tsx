@@ -197,7 +197,7 @@ export default function HomePage() {
     });
   }, [items, selectedCategory, searchTerm]);
 
-  // Group items by category
+
   const groupedItems = useMemo(() => {
     const groups: Record<string, MenuItem[]> = {};
 
@@ -209,7 +209,7 @@ export default function HomePage() {
       groups[category].push(item);
     });
 
-    // Sort categories with freshdrinks first
+
     const sorted: Record<string, MenuItem[]> = {};
     const categoryOrder = ["freshdrinks", "icecoffee", "coffee", "mexican", "milkshake", "hotdrinks", "syrup", "sweets"];
     
