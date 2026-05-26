@@ -366,7 +366,7 @@ export default function HomePage() {
                       placeholder={t("home.searchPlaceholder")}
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 h-12 text-sm sm:text-base bg-transparent border-0 text-gray-900 placeholder:text-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-[10px]"
+                      className="pl-10 h-12 text-base bg-transparent border-0 text-gray-900 placeholder:text-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-[10px]"
                     />
                   </div>
                 </div>
@@ -739,7 +739,7 @@ export default function HomePage() {
                 placeholder={lang === "ckb" ? "  بۆنموونە: هەڵمەت قادر" : "Halmat qadir"}
                 value={customerName}
                 onChange={(e) => setCustomerName(e.target.value)}
-                className="w-full px-3.5 py-2.5 text-sm bg-white border border-slate-300 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-amber-500/20 focus:border-amber-600 transition text-slate-800 placeholder:text-slate-400 placeholder:text-[11px] sm:placeholder:text-xs"
+                className="w-full px-3.5 py-2.5 text-base bg-white border border-slate-300 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-amber-500/20 focus:border-amber-600 transition text-slate-800 placeholder:text-slate-400 placeholder:text-[11px] sm:placeholder:text-xs"
               />
             </div>
 
@@ -754,7 +754,7 @@ export default function HomePage() {
                 placeholder={lang === "ckb" ? "بۆ نموونە: قەڵادزێ - بەرامبەر پاڕکی شار" : "e.g., Qalatdizah - Opposite Shar Park"}
                 value={customerAddress}
                 onChange={(e) => setCustomerAddress(e.target.value)}
-                className="w-full px-3.5 py-2.5 text-sm bg-white border border-slate-300 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-amber-500/20 focus:border-amber-600 transition text-slate-800 placeholder:text-slate-400 placeholder:text-[11px] sm:placeholder:text-xs"
+                className="w-full px-3.5 py-2.5 text-base bg-white border border-slate-300 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-amber-500/20 focus:border-amber-600 transition text-slate-800 placeholder:text-slate-400 placeholder:text-[11px] sm:placeholder:text-xs"
               />
             </div>
 
@@ -770,7 +770,7 @@ export default function HomePage() {
                 placeholder={lang === "ckb" ? "07515481228" : "e.g., 07515481228"}
                 value={customerPhone}
                 onChange={(e) => setCustomerPhone(e.target.value)}
-                className={`w-full px-3.5 py-2.5 text-sm bg-white border border-slate-300 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-amber-500/20 focus:border-amber-600 transition text-slate-800 placeholder:text-slate-400 placeholder:text-[11px] sm:placeholder:text-xs text-left ${lang === "ckb" ? "placeholder:text-right" : "placeholder:text-left"}`}
+                className={`w-full px-3.5 py-2.5 text-base bg-white border border-slate-300 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-amber-500/20 focus:border-amber-600 transition text-slate-800 placeholder:text-slate-400 placeholder:text-[11px] sm:placeholder:text-xs text-left ${lang === "ckb" ? "placeholder:text-right" : "placeholder:text-left"}`}
               />
             </div>
           </div>
