@@ -348,25 +348,25 @@ export default function HomePage() {
             {/* Search Bar */}
             <div className="mb-8 flex flex-col items-center">
               <div className="relative w-full max-w-2xl">
-                {/* 1.5px border animation wrapper */}
-                <div className="relative rounded-xl p-[1.5px] overflow-hidden shadow-xs bg-slate-200">
+                {/* Slimmer border animation wrapper on mobile */}
+                <div className="relative rounded-xl p-[1px] sm:p-[1.5px] overflow-hidden shadow-xs bg-slate-200">
                   <div 
                     className="absolute inset-[-100%] rounded-xl animate-[spin_5s_linear_infinite]" 
                     style={{
-                      background: "conic-gradient(from 0deg, transparent 50%, #1f2937 80%, transparent 100%)"
+                      background: "conic-gradient(from 0deg, transparent 50%, rgba(180, 83, 9, 0.45) 80%, transparent 100%)"
                     }} 
                   />
                   <div className="relative bg-white rounded-[10px] flex items-center">
                     <Search
                       className="absolute left-3 text-gray-400"
-                      size={20}
+                      size={18}
                     />
                     <Input
                       type="text"
                       placeholder={t("home.searchPlaceholder")}
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 h-12 text-base bg-transparent border-0 text-gray-900 placeholder:text-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-[10px]"
+                      className="pl-10 h-10 sm:h-12 text-base bg-transparent border-0 text-gray-900 placeholder:text-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-[10px]"
                     />
                   </div>
                 </div>
