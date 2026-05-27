@@ -742,7 +742,7 @@ export default function AdminDashboard() {
                       {/* Content */}
                       <div className="p-2.5">
                         <h3 className="text-sm font-bold text-slate-900 dark:text-slate-50 line-clamp-1 mb-1">{item.title}</h3>
-                        <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-1 mb-2">{item.price?.toLocaleString()} IQD</p>
+                        <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-1 mb-2">{item.price?.toLocaleString("en-US")} IQD</p>
                         
                         {/* Action Buttons */}
                         <div className="flex gap-1.5">

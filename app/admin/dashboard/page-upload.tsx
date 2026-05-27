@@ -440,7 +440,7 @@ export default function AdminDashboard() {
                     }}
                   />
                   <div className="absolute top-4 left-4 bg-orange-600 text-white px-3 py-1 rounded-full font-bold text-sm">
-                    {item.price.toLocaleString()} IQD
+                    {item.price.toLocaleString("en-US")} IQD
                   </div>
                 </div>
 

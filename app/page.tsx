@@ -109,10 +109,10 @@ export default function HomePage() {
       message += `🛒 *لیستی داواکارییەکان:*\n`;
       cart.forEach((cartItem) => {
         const title = cartItem.item.titleKurdish || cartItem.item.title;
-        message += `• *${title}* (${cartItem.quantity}x) - ${(cartItem.item.price * cartItem.quantity).toLocaleString()} ${currencyLabel}\n`;
+        message += `• *${title}* (${cartItem.quantity}x) - ${(cartItem.item.price * cartItem.quantity).toLocaleString("en-US")} ${currencyLabel}\n`;
       });
       const total = cart.reduce((sum, ci) => sum + (ci.item.price * ci.quantity), 0);
-      message += `\n*💰 کۆی گشتی داواکاری: ${total.toLocaleString()} ${currencyLabel}*`;
+      message += `\n*💰 کۆی گشتی داواکاری: ${total.toLocaleString("en-US")} ${currencyLabel}*`;
     } else {
       message = "Hello Caffe 24 ☕\nI would like to place this order:\n\n";
       message += `👤 *Customer Info:*\n`;
@@ -122,10 +122,10 @@ export default function HomePage() {
       message += `🛒 *Order Items:*\n`;
       cart.forEach((cartItem) => {
         const title = cartItem.item.title;
-        message += `• *${title}* (${cartItem.quantity}x) - ${(cartItem.item.price * cartItem.quantity).toLocaleString()} ${currencyLabel}\n`;
+        message += `• *${title}* (${cartItem.quantity}x) - ${(cartItem.item.price * cartItem.quantity).toLocaleString("en-US")} ${currencyLabel}\n`;
       });
       const total = cart.reduce((sum, ci) => sum + (ci.item.price * ci.quantity), 0);
-      message += `\n*💰 Total Amount: ${total.toLocaleString()} ${currencyLabel}*`;
+      message += `\n*💰 Total Amount: ${total.toLocaleString("en-US")} ${currencyLabel}*`;
     }
     return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
   };
@@ -431,7 +431,7 @@ export default function HomePage() {
                                         : item.title}
                                     </h5>
                                     <span className="text-xs font-extrabold text-amber-700 whitespace-nowrap shrink-0">
-                                      {item.price?.toLocaleString()}
+                                      {item.price?.toLocaleString("en-US")}
                                     </span>
                                   </div>
 
@@ -578,7 +578,7 @@ export default function HomePage() {
                       : selectedItem.title}
                   </h2>
                   <span className="text-base font-bold text-amber-700 whitespace-nowrap justify-self-end row-span-2 self-center">
-                    {selectedItem.price?.toLocaleString()} {currencyLabel}
+                    {selectedItem.price?.toLocaleString("en-US")} {currencyLabel}
                   </span>
                 </div>
 
@@ -689,7 +689,7 @@ export default function HomePage() {
                       {lang === "ckb" ? cartItem.item.titleKurdish || cartItem.item.title : cartItem.item.title}
                     </p>
                     <p className="text-amber-600 font-bold text-xs">
-                      {(cartItem.item.price * cartItem.quantity).toLocaleString()} {currencyLabel}
+                      {(cartItem.item.price * cartItem.quantity).toLocaleString("en-US")} {currencyLabel}
                     </p>
                   </div>
                   {/* Controls */}
@@ -721,7 +721,7 @@ export default function HomePage() {
                 {lang === "ckb" ? "کۆی گشتی:" : "Total Amount:"}
               </span>
               <span className="text-amber-700 font-black text-base">
-                {cart.reduce((sum, ci) => sum + (ci.item.price * ci.quantity), 0).toLocaleString()} {currencyLabel}
+                {cart.reduce((sum, ci) => sum + (ci.item.price * ci.quantity), 0).toLocaleString("en-US")} {currencyLabel}
               </span>
             </div>
           </div>
