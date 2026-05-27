@@ -366,7 +366,7 @@ export default function HomePage() {
                       placeholder={t("home.searchPlaceholder")}
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 h-10 sm:h-12 text-base bg-transparent border-0 text-gray-900 placeholder:text-gray-400 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-[10px]"
+                      className="pl-10 h-10 sm:h-12 text-base bg-transparent border-0 text-gray-900 placeholder:text-gray-400 placeholder:text-xs sm:placeholder:text-base focus-visible:ring-0 focus-visible:ring-offset-0 rounded-[10px]"
                     />
                   </div>
                 </div>
