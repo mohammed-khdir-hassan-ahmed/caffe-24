@@ -21,7 +21,7 @@ export function AnimatedCard({
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        // Trigger animation whenever card enters viewport (scrolling up or down)
+
         if (entry.isIntersecting) {
           setIsInView(true);
         } else {
