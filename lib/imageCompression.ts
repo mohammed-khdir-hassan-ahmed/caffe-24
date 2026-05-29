@@ -17,7 +17,7 @@ const DEFAULT_OPTIONS: CompressionOptions = {
 };
 
 /**
- * Compresses an image file to reduce bandwidth and storage usage
+ 
  * @param file - The image file to compress
  * @param options - Compression options (optional)
  * @returns Promise<File> - The compressed image file

@@ -10,8 +10,6 @@ export const translations: Record<AppLang, Record<string, string>> = {
     "common.backHome": "Back to Home",
 
     "theme.toggle": "Toggle theme",
-    "theme.light": "Light",
-    "theme.dark": "Dark",
 
     "lang.switch": "Language",
 
