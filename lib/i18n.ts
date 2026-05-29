@@ -107,6 +107,7 @@ export const translations: Record<AppLang, Record<string, string>> = {
     "contact.snapchat": "https://www.snapchat.com/add/caffe_24?share_id=EmckkaBogSs&locale=en-GB",
     "contact.whatsapp": "https://wa.me/9647515481228",
     "contact.viber": "viber://chat?number=%2B9647515481228",
+    "contact.instagram": "https://www.instagram.com/caffee_24?igsh=eTZxa2RpNHlwNXQ1",
   },
   ckb: {
     "common.close": "داخستن",
@@ -207,6 +208,7 @@ export const translations: Record<AppLang, Record<string, string>> = {
     "contact.snapchat": "https://www.snapchat.com/add/caffe_24?share_id=EmckkaBogSs&locale=en-GB",
     "contact.whatsapp": "https://wa.me/9647515481228",
     "contact.viber": "viber://chat?number=%2B9647515481228",
+    "contact.instagram": "https://www.instagram.com/caffee_24?igsh=eTZxa2RpNHlwNXQ1",
   },
 };
 

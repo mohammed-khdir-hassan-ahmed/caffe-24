@@ -27,22 +27,22 @@ export default function LoadingSpinner() {
       <div className="absolute inset-0 bg-radial-gradient(circle at center, transparent 0%, rgba(255, 255, 255, 0.3) 100%)" />
 
       {/* Main Content */}
-      <div className="flex flex-col items-center justify-center gap-4 relative z-10">
+      <div className="flex flex-col items-center justify-center gap-2 md:gap-4 relative z-10 px-4">
         
         {/* Modern Animated Orbs Spinner */}
-        <div className="relative w-16 h-16 flex items-center justify-center">
+        <div className="relative w-12 h-12 md:w-16 md:h-16 flex items-center justify-center">
           {/* Outer rotating orbit */}
           <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-gray-700 border-r-amber-600 animate-spin shadow-xl shadow-amber-600/20"
             style={{ animationDuration: '3s' }}
           />
           
           {/* Inner rotating orbit - reverse */}
-          <div className="absolute inset-3 rounded-full border-2 border-transparent border-b-gray-700 border-l-amber-600 animate-spin shadow-lg shadow-amber-600/10"
+          <div className="absolute inset-2 md:inset-3 rounded-full border-2 border-transparent border-b-gray-700 border-l-amber-600 animate-spin shadow-lg shadow-amber-600/10"
             style={{ animationDuration: '4s', animationDirection: 'reverse' }}
           />
           
           {/* Pulsing center orb */}
-          <div className="absolute w-7 h-7 rounded-full bg-linear-to-br from-gray-800/60 to-amber-600/30 animate-pulse shadow-2xl shadow-amber-600/20"
+          <div className="absolute w-5 h-5 md:w-7 md:h-7 rounded-full bg-linear-to-br from-gray-800/60 to-amber-600/30 animate-pulse shadow-2xl shadow-amber-600/20"
             style={{ animationDuration: '2s' }}
           />
           
@@ -51,9 +51,9 @@ export default function LoadingSpinner() {
             <Image 
               src="/image/2.png" 
               alt="Logo" 
-              width={28} 
-              height={28}
-              className="w-7 h-7 object-contain filter brightness-150 relative z-10"
+              width={20} 
+              height={20}
+              className="w-5 h-5 md:w-7 md:h-7 object-contain filter brightness-150 relative z-10"
               priority
               style={{
                 filter: 'drop-shadow(0 0 12px rgba(180, 83, 9, 0.7))'
@@ -64,7 +64,7 @@ export default function LoadingSpinner() {
 
         {/* Loading Text */}
         <div className="text-center">
-          <p className="text-md font-bold tracking-widest mb-3">
+          <p className="text-xs md:text-md font-bold tracking-widest mb-2 md:mb-3">
             <span className="bg-linear-to-r from-amber-600 via-orange-500 to-amber-700 bg-clip-text text-transparent" style={{ 
               animation: 'shimmer 2s infinite',
               backgroundSize: '200% 100%'
